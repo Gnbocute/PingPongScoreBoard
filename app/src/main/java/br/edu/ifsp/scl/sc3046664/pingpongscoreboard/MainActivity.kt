@@ -19,14 +19,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.ifsp.scl.sc3046664.pingpongscoreboard.ui.theme.PingPongScoreBoardTheme
 
@@ -55,6 +53,10 @@ fun PingPongScoreBoardScreen(
     Column(
         modifier = modifier.fillMaxSize()
     ) {
+        val player1Score by viewModel.player1Score.collectAsStateWithLifecycle()
+        val player2Score by viewModel.player2Score.collectAsStateWithLifecycle()
+        val player1Name by viewModel.player1Name.collectAsStateWithLifecycle()
+        val player2Name by viewModel.player2Name.collectAsStateWithLifecycle()
 
         Column(
             modifier = Modifier
@@ -65,13 +67,13 @@ fun PingPongScoreBoardScreen(
         ) {
 
             OutlinedTextField(
-                value = viewModel.player1Name,
-                onValueChange = { viewModel.player1Name = it },
+                value = player1Name,
+                onValueChange = { viewModel.updatePlayer1Name(it) },
                 singleLine = true
             )
 
             Text(
-                text = viewModel.player1Score.toString(),
+                text = player1Score.toString(),
                 fontSize = 48.sp
             )
 
@@ -116,13 +118,13 @@ fun PingPongScoreBoardScreen(
         ) {
 
             OutlinedTextField(
-                value = viewModel.player2Name,
-                onValueChange = { viewModel.player2Name = it },
+                value = player2Name,
+                onValueChange = { viewModel.updatePlayer2Name(it) },
                 singleLine = true
             )
 
             Text(
-                text = viewModel.player2Score.toString(),
+                text = player2Score.toString(),
                 fontSize = 48.sp
             )
 

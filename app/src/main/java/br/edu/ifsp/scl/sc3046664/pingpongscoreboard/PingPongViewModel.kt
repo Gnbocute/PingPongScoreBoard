@@ -1,41 +1,47 @@
 package br.edu.ifsp.scl.sc3046664.pingpongscoreboard
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
-class PingPongViewModel : ViewModel() {
-    private val _player1Score = MutableStateFlow(0)
-    val player1Score: StateFlow<Int> = _player1Score.asStateFlow()
+class PingPongViewModel(
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+    val player1Score: StateFlow<Int> =
+        savedStateHandle.getStateFlow(KEY_PLAYER1_SCORE, 0)
+    val player2Score: StateFlow<Int> =
+        savedStateHandle.getStateFlow(KEY_PLAYER2_SCORE, 0)
 
-    private val _player2Score = MutableStateFlow(0)
-    val player2Score: StateFlow<Int> = _player2Score.asStateFlow()
-
-    private val _player1Name = MutableStateFlow("Player 1")
-    val player1Name: StateFlow<String> = _player1Name.asStateFlow()
-
-    private val _player2Name = MutableStateFlow("Player 2")
-    val player2Name: StateFlow<String> = _player2Name.asStateFlow()
+    val player1Name: StateFlow<String> =
+        savedStateHandle.getStateFlow(KEY_PLAYER1_NAME, "Player 1")
+    val player2Name: StateFlow<String> =
+        savedStateHandle.getStateFlow(KEY_PLAYER2_NAME, "Player 2")
 
     fun incrementPlayer1() {
-        _player1Score.value++
+        savedStateHandle[KEY_PLAYER1_SCORE] = player1Score.value + 1
     }
 
     fun incrementPlayer2() {
-        _player2Score.value++
+        savedStateHandle[KEY_PLAYER2_SCORE] = player2Score.value + 1
     }
 
     fun updatePlayer1Name(name: String) {
-        _player1Name.value = name
+        savedStateHandle[KEY_PLAYER1_NAME] = name
     }
 
     fun updatePlayer2Name(name: String) {
-        _player2Name.value = name
+        savedStateHandle[KEY_PLAYER2_NAME] = name
     }
 
     fun reset() {
-        _player1Score.value = 0
-        _player2Score.value = 0
+        savedStateHandle[KEY_PLAYER1_SCORE] = 0
+        savedStateHandle[KEY_PLAYER2_SCORE] = 0
+    }
+
+    companion object {
+        private const val KEY_PLAYER1_SCORE = "player1Score"
+        private const val KEY_PLAYER2_SCORE = "player2Score"
+        private const val KEY_PLAYER1_NAME = "player1Name"
+        private const val KEY_PLAYER2_NAME = "player2Name"
     }
 }

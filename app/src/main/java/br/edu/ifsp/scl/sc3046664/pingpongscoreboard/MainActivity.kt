@@ -19,7 +19,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -28,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.ifsp.scl.sc3046664.pingpongscoreboard.ui.theme.PingPongScoreBoardTheme
 
 class MainActivity : ComponentActivity() {
@@ -47,12 +47,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun PingPongScoreBoardScreen(modifier: Modifier = Modifier) {
-    var player1Score by remember { mutableIntStateOf(0) }
-    var player2Score by remember { mutableIntStateOf(0) }
-
-    var player1Name by remember { mutableStateOf("Player 1") }
-    var player2Name by remember { mutableStateOf("Player 2") }
+fun PingPongScoreBoardScreen(
+    modifier: Modifier = Modifier,
+    viewModel: PingPongViewModel = viewModel()
+) {
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -67,13 +65,13 @@ fun PingPongScoreBoardScreen(modifier: Modifier = Modifier) {
         ) {
 
             OutlinedTextField(
-                value = player1Name,
-                onValueChange = { player1Name = it },
+                value = viewModel.player1Name,
+                onValueChange = { viewModel.player1Name = it },
                 singleLine = true
             )
 
             Text(
-                text = player1Score.toString(),
+                text = viewModel.player1Score.toString(),
                 fontSize = 48.sp
             )
 
@@ -83,9 +81,7 @@ fun PingPongScoreBoardScreen(modifier: Modifier = Modifier) {
 
                 Button(
                     onClick = {
-
-                        player1Score++
-
+                        viewModel.incrementPlayer1()
                     }
                 ) {
                     Text("+1")
@@ -104,8 +100,7 @@ fun PingPongScoreBoardScreen(modifier: Modifier = Modifier) {
 
             Button(
                 onClick = {
-                    player1Score = 0
-                    player2Score = 0
+                    viewModel.reset()
                 }
             ) {
                 Text("Reiniciar")
@@ -121,13 +116,13 @@ fun PingPongScoreBoardScreen(modifier: Modifier = Modifier) {
         ) {
 
             OutlinedTextField(
-                value = player2Name,
-                onValueChange = { player2Name = it },
+                value = viewModel.player2Name,
+                onValueChange = { viewModel.player2Name = it },
                 singleLine = true
             )
 
             Text(
-                text = player2Score.toString(),
+                text = viewModel.player2Score.toString(),
                 fontSize = 48.sp
             )
 
@@ -137,8 +132,7 @@ fun PingPongScoreBoardScreen(modifier: Modifier = Modifier) {
 
                 Button(
                     onClick = {
-
-                        player2Score++
+                        viewModel.incrementPlayer2()
                     }
                 ) {
                     Text("+1")
